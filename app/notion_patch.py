@@ -7,6 +7,7 @@ import secrets
 import notion_patch_helpers as helpers
 
 JSON = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
+MOVIE_DB_API_KEY = secrets.MOVIE_DB_API_KEY
 MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
 
 
@@ -70,7 +71,7 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
     return cast_list
 
 
-def patch_notion_db_item(page_details: Dict={}) -> None:
+def patch_notion_db_item(page_details: Dict={}, NOTION_KEY: str='') -> None:
 
     # extract details from new notion databse item
     page_id = page_details["id"]

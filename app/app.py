@@ -48,7 +48,7 @@ def api():
     status = 200
     for page in pages:
         if is_new_page(page):
-            status = patch_notion_db_item(page)
+            status = patch_notion_db_item(page, NOTION_KEY)
 
     return str(status)
 
