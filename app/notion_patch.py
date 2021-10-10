@@ -71,17 +71,19 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
     return cast_list
 
 
-def patch_notion_db_item(page_details: Dict={}, NOTION_KEY: str='') -> None:
+def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
 
     # extract details from new notion databse item
     page_id = page_details["id"]
     content_type = page_details["properties"]["Content Type"]["select"]["name"]
-    title = page_details["properties"]["Name"]["title"][0]["text"]["content"].replace(" ", "%")
+    title = page_details["properties"]["Name"]["title"][0]["text"]["content"].replace(
+        " ", "%"
+    )
 
     if page_details["properties"]["Language"]["select"]:
         language = page_details["properties"]["Language"]["select"]["name"]
     else:
-        language = ''
+        language = ""
 
     try:
         # get details of the specified title
@@ -104,7 +106,7 @@ def patch_notion_db_item(page_details: Dict={}, NOTION_KEY: str='') -> None:
         genres=title_details["genres"],
         cover=title_details["poster_path"],
         rating=title_details["vote_average"],
-        language=title_details["original_language"]
+        language=title_details["original_language"],
     )
 
     # check if poster_path exists
@@ -121,7 +123,9 @@ def patch_notion_db_item(page_details: Dict={}, NOTION_KEY: str='') -> None:
         "Content-Type": "application/json",
         "Notion-Version": "2021-08-16",
     }
-    response = requests.patch(notion_base_url, data=json.dumps(patch_request), headers=NOTION_HEADER)
+    response = requests.patch(
+        notion_base_url, data=json.dumps(patch_request), headers=NOTION_HEADER
+    )
     print(response.json())
     # check status code
     if response.status_code != 200:
@@ -131,6 +135,5 @@ def patch_notion_db_item(page_details: Dict={}, NOTION_KEY: str='') -> None:
             + ": "
             + str(response.reason)
         )
-        return error 
+        return error
     return response.status_code
-

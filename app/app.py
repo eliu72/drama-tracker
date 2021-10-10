@@ -1,4 +1,3 @@
-import logging
 from typing import Dict
 import requests
 from flask import Flask
@@ -26,7 +25,6 @@ app.config["CORS_HEADERS"] = "Content-Type"
 # http://127.0.0.1:5000/api?notion_key=<your-key>&database_id=<db-id>
 
 
-
 @app.route("/api", methods=["GET"])
 def api():
     query_parameters = request.args
@@ -51,6 +49,7 @@ def api():
             status = patch_notion_db_item(page, NOTION_KEY)
 
     return str(status)
+
 
 def is_new_page(page: Dict):
     if (

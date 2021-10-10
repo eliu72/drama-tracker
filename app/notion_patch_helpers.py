@@ -9,7 +9,7 @@ def get_template() -> Dict:
             "Actors": {"multi_select": []},
             "Genres": {"multi_select": []},
             "Rating": {"number": 0},
-            "Language": {"select": {"name": 'en'}}
+            "Language": {"select": {"name": "en"}},
         },
         "cover": {"type": "external", "external": {"url": ""}},
     }
@@ -38,17 +38,16 @@ def patch_genres(template: Dict = {}, genres_list: List[Dict] = []):
 
 
 def patch_cover(template: Dict = {}, filepath: str = ""):
-    template["cover"]["external"]["url"] = (
-        "https://image.tmdb.org/t/p/w500" + filepath
-    )
+    template["cover"]["external"]["url"] = "https://image.tmdb.org/t/p/w500" + filepath
     return template
+
 
 def patch_rating(template: Dict = {}, rating: int = 0):
     template["properties"]["Rating"]["number"] = rating
     return template
 
 
-def patch_language(template: Dict={}, language: str='en'):
+def patch_language(template: Dict = {}, language: str = "en"):
     template["properties"]["Language"]["select"]["name"] = language
     return template
 
