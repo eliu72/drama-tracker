@@ -1,6 +1,6 @@
 cast = [
     {
-        "adult": false,  # noqa: F821
+        "adult": false,  
         "gender": 1,
         "id": 1223786,
         "known_for_department": "Acting",
@@ -13,7 +13,7 @@ cast = [
         "order": 0,
     },
     {
-        "adult": false,  # noqa: F821
+        "adult": false, 
         "gender": 1,
         "id": 17286,
         "known_for_department": "Acting",
@@ -26,7 +26,7 @@ cast = [
         "order": 1,
     },
     {
-        "adult": false,  # noqa: F821
+        "adult": false, 
         "gender": 1,
         "id": 1001657,
         "known_for_department": "Acting",
@@ -38,7 +38,7 @@ cast = [
         "credit_id": "5256c8b419c2956ff6047f34",
         "order": 2,
     },{
-      "adult": false, # noqa: F821
+      "adult": false,
       "gender": 2,
       "id": 239019,
       "known_for_department": "Acting",
@@ -51,7 +51,7 @@ cast = [
       "order": 3
     },
     {
-      "adult": false, # noqa: F821
+      "adult": false,
       "gender": 2,
       "id": 22970,
       "known_for_department": "Acting",
