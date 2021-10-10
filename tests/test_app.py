@@ -6,15 +6,6 @@ from drama_tracker.secrets import MOVIE_DB_API_KEY
 
 
 @pytest.fixture
-def avengers_args():
-    return {
-        "Content Type": [{"text": "movie"}],
-        "Title": [{"text": "Avengers"}],
-        "Language": {"name": "en"},
-    }
-
-
-@pytest.fixture
 def avengers_result():
     return {
         "results": [
@@ -30,11 +21,11 @@ def avengers_result():
     }
 
 
-def test_get_title_details(mocker, avengers_args, avengers_result):
+def test_get_title_details(mocker, avengers_result):
     mock_api_call = mocker.patch("requests.get", return_value=requests.Response())
     mock_jsonify = mocker.patch("requests.Response.json", return_value=avengers_result)
-    app.get_title_details(avengers_args)
+    app.get_title_details("Avengers", "movie", "en")
 
-    request_url = f"https://api.themoviedb.org/3/search/movie?api_key={MOVIE_DB_API_KEY}&language=en&query=Avengers"  # noqa: E501
+    request_url = f"https://api.themoviedb.org/3/movie/24428?api_key={MOVIE_DB_API_KEY}"  # noqa: E501
     mock_api_call.assert_called_with(request_url)
-    mock_jsonify.assert_called_once()
+    mock_jsonify.assert_called()
