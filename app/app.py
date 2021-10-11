@@ -5,8 +5,8 @@ from flask import request
 from flask_cors import CORS
 
 
-from app.notion_patch import patch_notion_db_item
-from app.notion_create_db_helpers import get_empty_template
+from notion_patch import patch_notion_db_item
+from notion_create_db_helpers import get_empty_template
 
 app = Flask(__name__)
 cors = CORS(app)
