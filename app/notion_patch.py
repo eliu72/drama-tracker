@@ -1,12 +1,12 @@
-import requests
+import os
 import json
+import requests
 from typing import Union, Dict, List, Any
 
-import secrets
-import notion_patch_helpers as helpers
+from app import notion_patch_helpers as helpers
 
 JSON = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
-MOVIE_DB_API_KEY = secrets.MOVIE_DB_API_KEY
+MOVIE_DB_API_KEY = os.environ["MOVIE_DB_API_KEY"]
 MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
 
 

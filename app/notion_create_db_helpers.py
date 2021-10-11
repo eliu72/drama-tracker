@@ -11,12 +11,16 @@ def get_empty_template() -> Dict:
         "Rating": {"number": {}},
         "Language": {"select": {}},
         "Tags": None,
-        "Personal Rating": {"select": {"options": [
-            {"name": "⭐", "color": "default"},
-            {"name": "⭐⭐", "color": "default"},
-            {"name": "⭐⭐⭐", "color": "default"},
-            {"name": "⭐⭐⭐⭐", "color": "default"},
-            {"name": "⭐⭐⭐⭐⭐", "color": "default"}
-        ]}},
-        "Personal Review": {"rich_text": {}}
+        "Personal Rating": {
+            "select": {
+                "options": [
+                    {"name": "⭐", "color": "default"},
+                    {"name": "⭐⭐", "color": "default"},
+                    {"name": "⭐⭐⭐", "color": "default"},
+                    {"name": "⭐⭐⭐⭐", "color": "default"},
+                    {"name": "⭐⭐⭐⭐⭐", "color": "default"},
+                ]
+            }
+        },
+        "Personal Review": {"rich_text": {}},
     }

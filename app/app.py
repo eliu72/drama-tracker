@@ -5,8 +5,8 @@ from flask import request
 from flask_cors import CORS
 
 
-from notion_patch import patch_notion_db_item
-from notion_create_db_helpers import get_empty_template
+from app.notion_patch import patch_notion_db_item
+from app.notion_create_db_helpers import get_empty_template
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -44,7 +44,7 @@ def create_database():
     body = {"query": DATABASE_TITLE}
     response = requests.post(
         notion_base_url, data=json.dumps(body), headers=NOTION_HEADER
-    )   
+    )
 
     # page id should be first search result
     DATABASE_ID = response.json()["results"][0]["id"]
