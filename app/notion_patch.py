@@ -3,7 +3,7 @@ import json
 import requests
 from typing import Union, Dict, List, Any
 
-import notion_patch_helpers as helpers
+import app.notion_patch_helpers as helpers
 
 JSON = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
 MOVIE_DB_API_KEY = os.environ["MOVIE_DB_API_KEY"]
