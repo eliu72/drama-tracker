@@ -11,21 +11,20 @@ MOVIE_DB_API_KEY = secrets.MOVIE_DB_API_KEY
 MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
 
 
-def get_title_details(
-    title: str = "", content_type: str = "", language: str = "en", year: str = ""
-) -> Dict:
+def get_title_details(content_type: str = "", **kwargs) -> Dict:
     # query search endpoint
-    query_url = (
-        MOVIE_DB_BASE_URL
-        + f"search/{content_type}?api_key={MOVIE_DB_API_KEY}"
-        + f"&language={language}&query={title}&year={year}"
-    )
+    query_url = MOVIE_DB_BASE_URL + f"search/{content_type}?api_key={MOVIE_DB_API_KEY}"
+
+    # unpack kwargs
+    for key, val in kwargs.items():
+        if val:
+            query_url += f"&{key}={val}"
     response = requests.get(query_url)
     data = response.json()
 
     # check return status
     if response.status_code != 200:
-        raise Exception(
+        return Exception(
             "Title Search Error "
             + str(response.status_code)
             + ": "
@@ -39,7 +38,7 @@ def get_title_details(
 
     # check return status
     if response.status_code != 200:
-        raise Exception(
+        return Exception(
             "Get Title Details Error "
             + str(response.status_code)
             + ": "
@@ -53,13 +52,13 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
     # query credits endpoint
     query_url = (
         MOVIE_DB_BASE_URL
-        + f"{content_type}/{movie_id}/credits?api_key={MOVIE_DB_API_KEY}&language=en"
+        + f"{content_type}/{movie_id}/credits?api_key={MOVIE_DB_API_KEY}"
     )
     response = requests.get(query_url)
 
     # check return status
     if response.status_code != 200:
-        raise Exception(
+        return Exception(
             "Get Main Actors Error "
             + str(response.status_code)
             + ": "
@@ -72,31 +71,37 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
 
 
 def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
+    # return error if content_type is not specified
+    if page_details["properties"]["Content Type"]["select"] is None:
+        return Exception("'Content Type' not specified!")
 
     # extract details from new notion databse item
     page_id = page_details["id"]
     content_type = page_details["properties"]["Content Type"]["select"]["name"]
-    title = page_details["properties"]["Name"]["title"][0]["text"]["content"].replace(
-        " ", "%"
-    )
 
-    if page_details["properties"]["Language"]["select"]:
-        language = page_details["properties"]["Language"]["select"]["name"]
+    # different year notation for movie vs tv
+    if content_type == "movie":
+        date = "release_date"
+        year = "year"
     else:
-        language = ""
+        date = "first_air_date"
+        year = "first_air_date_year"
+
+    # kwargs for search query
+    kwargs = {
+        "query": page_details["properties"]["Name"]["title"][0]["text"][
+            "content"
+        ].replace(" ", "%"),
+        year: page_details["properties"]["Year"]["number"],
+    }
 
     try:
         # get details of the specified title
-        title_details = get_title_details(title, content_type, language)
+        title_details = get_title_details(content_type, **kwargs)
         cast_list = get_main_actors(title_details["id"], content_type)
     except Exception as e:
-        logging.info(e)
         return e
 
-    if content_type == "movie":
-        date = "release_date"
-    else:
-        date = "first_air_date"
     # create patch_request
     patch_request = helpers.patch_all(
         helpers.get_template(),
@@ -115,7 +120,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
             patch_request,
             "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
         )
-    print(patch_request)
+
     # Notion API request
     notion_base_url = f"https://api.notion.com/v1/pages/{page_id}"
     NOTION_HEADER = {
@@ -126,14 +131,13 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
     response = requests.patch(
         notion_base_url, data=json.dumps(patch_request), headers=NOTION_HEADER
     )
-    print(response.json())
+
     # check status code
     if response.status_code != 200:
-        error = (
+        return Exception(
             "Notion API Error "
             + str(response.status_code)
             + ": "
             + str(response.reason)
         )
-        return error
-    return response.status_code
+    return "Success!"

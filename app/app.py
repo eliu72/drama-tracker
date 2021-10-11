@@ -43,7 +43,7 @@ def api():
     response = requests.post(notion_base_url, headers=NOTION_HEADER)
 
     pages = response.json()["results"]
-    status = 200
+    status = "Success!"
     for page in pages:
         if is_new_page(page):
             status = patch_notion_db_item(page, NOTION_KEY)
@@ -51,7 +51,7 @@ def api():
     return str(status)
 
 
-def is_new_page(page: Dict):
+def is_new_page(page: Dict = {}):
     if (
         page["properties"]["Overview"]["rich_text"] == []
         or page["properties"]["Actors"]["multi_select"] == []
