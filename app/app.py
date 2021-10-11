@@ -1,4 +1,3 @@
-from typing import Dict
 import requests
 import json
 from flask import Flask
@@ -33,46 +32,34 @@ def create_database():
 
     # get notion api key
     NOTION_KEY = query_parameters.get("notion_key")
-    PAGE_TITLE = query_parameters.get("page_title")
+    DATABASE_TITLE = query_parameters.get("database_title")
 
     # search for page id
-    notion_base_url = f"https://api.notion.com/v1/search"
+    notion_base_url = "https://api.notion.com/v1/search"
     NOTION_HEADER = {
         "Authorization": NOTION_KEY,
         "Content-Type": "application/json",
         "Notion-Version": "2021-08-16",
     }
-    body = {"query": PAGE_TITLE}
+    body = {"query": DATABASE_TITLE}
     response = requests.post(
         notion_base_url, data=json.dumps(body), headers=NOTION_HEADER
-    )
+    )   
 
     # page id should be first search result
-    PARENT_ID = response.json()["results"][0]["id"]
+    DATABASE_ID = response.json()["results"][0]["id"]
 
-    # read notion database
-    notion_base_url = f"https://api.notion.com/v1/databases"
+    # create notion database
+    notion_base_url = f"https://api.notion.com/v1/databases/{DATABASE_ID}"
     body = {
-        "parent": {"type": "page_id", "page_id": PARENT_ID},
-        "icon": {"type": "emoji", "emoji": "📺"},
-        "title": [
-            {
-                "type": "text",
-                "text": {
-                    "content": "Show Tracker",
-                },
-            }
-        ],
         "properties": get_empty_template(),
     }
-    print(body)
-    response = requests.post(
+    response = requests.patch(
         notion_base_url, data=json.dumps(body), headers=NOTION_HEADER
     )
-    print(response.reason)
     if response.status_code != 200:
-        return "Error with creating Notion database. Please check your Notion Key and Parent Page ID. Make sure your integration is shared to the parent page."
-    return "Success! Feel free to customize the title, icon, and cover but do not change the table properties!"
+        return "Error with creating Notion database. Please check your Notion Key and Parent Page ID. Make sure your integration is shared to the parent page."  # noqa: E501
+    return "Success! Feel free to customize the title, icon, and cover, but do not change the table properties! Add this link to your description: <> to sync changes."  # noqa: E501
 
 
 @app.route("/api")
@@ -81,32 +68,46 @@ def api():
 
     # get notion api key
     NOTION_KEY = query_parameters.get("notion_key")
-    DATABASE_ID = query_parameters.get("database_id")
+    DATABASE_TITLE = query_parameters.get("database_title")
 
-    # read notion database
+    # search for page id
+    notion_base_url = "https://api.notion.com/v1/search"
+    NOTION_HEADER = {
+        "Authorization": NOTION_KEY,
+        "Content-Type": "application/json",
+        "Notion-Version": "2021-08-16",
+    }
+    body = {"query": DATABASE_TITLE}
+    response = requests.post(
+        notion_base_url, data=json.dumps(body), headers=NOTION_HEADER
+    )
+
+    # page id should be first search result
+    DATABASE_ID = response.json()["results"][0]["id"]
+
+    # read notion database and filter only new entries
     notion_base_url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
     NOTION_HEADER = {
         "Authorization": NOTION_KEY,
         "Content-Type": "application/json",
         "Notion-Version": "2021-08-16",
     }
-    response = requests.post(notion_base_url, headers=NOTION_HEADER)
+    body = {
+        "filter": {
+            "and": [
+                {"property": "Overview", "text": {"is_empty": True}},
+                {"property": "Actors", "multi_select": {"is_empty": True}},
+                {"property": "Genres", "multi_select": {"is_empty": True}},
+            ]
+        }
+    }
+    response = requests.post(
+        notion_base_url, data=json.dumps(body), headers=NOTION_HEADER
+    )
 
     pages = response.json()["results"]
     status = "Success!"
     for page in pages:
-        if is_new_page(page):
-            status = patch_notion_db_item(page, NOTION_KEY)
+        status = patch_notion_db_item(page, NOTION_KEY)
 
     return str(status)
-
-
-def is_new_page(page: Dict = {}):
-    if (
-        page["properties"]["Overview"]["rich_text"] == []
-        or page["properties"]["Actors"]["multi_select"] == []
-        or page["properties"]["Genres"]["multi_select"] == []
-        or page["cover"] is None
-    ):
-        return True
-    return False
