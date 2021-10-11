@@ -6,7 +6,7 @@ from typing import Union, Dict, List, Any
 import app.notion_patch_helpers as helpers
 
 JSON = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
-MOVIE_DB_API_KEY = secrets.MOVIE_DB_API_KEY
+MOVIE_DB_API_KEY = os.environ["MOVIE_DB_API_KEY"]
 MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
 
 
@@ -29,7 +29,7 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
             + ": "
             + str(response.reason)
         )
-    
+
     # get full details using id
     id = data["results"][0]["id"]
     query_url = MOVIE_DB_BASE_URL + f"{content_type}/{id}?api_key={MOVIE_DB_API_KEY}"
@@ -43,7 +43,7 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
             + ": "
             + str(response.reason)
         )
-    
+
     return response.json()
 
 
