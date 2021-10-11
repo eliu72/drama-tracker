@@ -13,3 +13,4 @@
 ## Notes
 - I recommend putting the sync-up link in your database description for easy access
 - You can add multiple titles and sync them all up at once
+- View in gallery view to see cards (Turn on Card Preview under Properties)
