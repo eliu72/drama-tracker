@@ -103,23 +103,25 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         return e
 
     # create patch_request
-    patch_request = helpers.patch_all(
-        helpers.get_template(),
-        year=int(title_details[date][:4]),
-        overview=title_details["overview"],
-        cast_list=cast_list,
-        genres=title_details["genres"],
-        cover=title_details["poster_path"],
-        rating=title_details["vote_average"],
-        language=title_details["original_language"],
-    )
-
-    # check if poster_path exists
-    if title_details["poster_path"] == "null" and title_details["backdrop_path"]:
-        patch_request = helpers.patch_cover(
-            patch_request,
-            "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
+    try:
+        patch_request = helpers.patch_all(
+            helpers.get_template(),
+            year=int(title_details[date][:4]),
+            overview=title_details["overview"],
+            cast_list=cast_list,
+            genres=title_details["genres"],
+            cover=title_details["poster_path"],
+            rating=title_details["vote_average"],
+            language=title_details["original_language"],
         )
+        # check if poster_path exists
+        if title_details["poster_path"] == "null" and title_details["backdrop_path"]:
+            patch_request = helpers.patch_cover(
+                patch_request,
+                "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
+            )
+    except Exception as e:
+        return e
 
     # Notion API request
     notion_base_url = f"https://api.notion.com/v1/pages/{page_id}"
