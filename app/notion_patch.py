@@ -114,14 +114,16 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
             rating=title_details["vote_average"],
             language=title_details["original_language"],
         )
-        # check if poster_path exists
-        if title_details["poster_path"] == "null" and title_details["backdrop_path"]:
-            patch_request = helpers.patch_cover(
-                patch_request,
-                "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
-            )
     except Exception as e:
         return e
+        
+    # check if poster_path exists
+    if title_details["poster_path"] == "null" and title_details["backdrop_path"]:
+        patch_request = helpers.patch_cover(
+            patch_request,
+            "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
+        )
+ 
 
     # Notion API request
     notion_base_url = f"https://api.notion.com/v1/pages/{page_id}"
