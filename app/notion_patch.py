@@ -21,8 +21,9 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
     response = requests.get(query_url)
     data = response.json()
 
-    # check return status
+    # if title cannot be found, populate notion page with N/A and raise Exception
     if response.json()['results'] == []:
+        patch_request = helpers.patch_all(helpers.get_template())
         raise Exception("Title Search Error")
 
     # get full details using id

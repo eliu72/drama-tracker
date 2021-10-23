@@ -53,11 +53,13 @@ def patch_language(template: Dict = {}, language: str = "en"):
 
 
 def patch_all(template: Dict = {}, **kwargs):
-    template = patch_year(template, kwargs["year"])
-    template = patch_overview(template, kwargs["overview"])
-    template = patch_actors(template, kwargs["cast_list"])
-    template = patch_genres(template, kwargs["genres"])
-    template = patch_cover(template, kwargs["cover"])
-    template = patch_rating(template, kwargs["rating"])
-    template = patch_language(template, kwargs["language"])
+    if not kwargs:
+        kwargs == {}
+    template = patch_year(template, kwargs.get("year", "N/A"))
+    template = patch_overview(template, kwargs.get("overview", "N/A"))
+    template = patch_actors(template, kwargs.get("cast_list", "N/A"))
+    template = patch_genres(template, kwargs.get("genres", "N/A"))
+    template = patch_cover(template, kwargs.get("cover", "N/A"))
+    template = patch_rating(template, kwargs.get("rating", "N/A"))
+    template = patch_language(template, kwargs.get("language", "N/A"))
     return template
