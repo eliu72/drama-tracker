@@ -26,12 +26,16 @@ def patch_overview(template: Dict = {}, overview: str = ""):
 
 
 def patch_actors(template: Dict = {}, cast_list: List[Dict] = []):
+    if not cast_list:
+        template["properties"]["Genres"]["multi_select"].append({"name": "None"})
     for actor in cast_list:
         template["properties"]["Actors"]["multi_select"].append({"name": actor["name"]})
     return template
 
 
 def patch_genres(template: Dict = {}, genres_list: List[Dict] = []):
+    if not genres_list:
+        template["properties"]["Genres"]["multi_select"].append({"name": "None"})
     for genre in genres_list:
         template["properties"]["Genres"]["multi_select"].append({"name": genre["name"]})
     return template
@@ -57,8 +61,8 @@ def patch_all(template: Dict = {}, **kwargs):
         kwargs == {}
     template = patch_year(template, kwargs.get("year", "N/A"))
     template = patch_overview(template, kwargs.get("overview", "N/A"))
-    template = patch_actors(template, kwargs.get("cast_list", "N/A"))
-    template = patch_genres(template, kwargs.get("genres", "N/A"))
+    template = patch_actors(template, kwargs.get("cast_list", None))
+    template = patch_genres(template, kwargs.get("genres", None))
     template = patch_cover(template, kwargs.get("cover", "N/A"))
     template = patch_rating(template, kwargs.get("rating", "N/A"))
     template = patch_language(template, kwargs.get("language", "N/A"))
