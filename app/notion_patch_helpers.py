@@ -27,7 +27,7 @@ def patch_overview(template: Dict = {}, overview: str = ""):
 
 def patch_actors(template: Dict = {}, cast_list: List[Dict] = []):
     if not cast_list:
-        template["properties"]["Genres"]["multi_select"].append({"name": "None"})
+        template["properties"]["Actors"]["multi_select"].append({"name": "None"})
         return template
     for actor in cast_list:
         template["properties"]["Actors"]["multi_select"].append({"name": actor["name"]})
