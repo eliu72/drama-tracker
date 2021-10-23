@@ -15,7 +15,7 @@ def get_template() -> Dict:
     }
 
 
-def patch_year(template: Dict = {}, year: int = 0):
+def patch_year(template: Dict = {}, year: str = "0000"):
     template["properties"]["Year"]["number"] = year
     return template
 
@@ -48,7 +48,7 @@ def patch_cover(template: Dict = {}, filepath: str = ""):
     return template
 
 
-def patch_rating(template: Dict = {}, rating: int = 0):
+def patch_rating(template: Dict = {}, rating: int = -1):
     template["properties"]["Rating"]["number"] = rating
     return template
 
@@ -59,11 +59,11 @@ def patch_language(template: Dict = {}, language: str = "en"):
 
 
 def patch_all(template: Dict = {}, **kwargs):
-    template = patch_year(template, kwargs.get("year", "N/A"))
+    template = patch_year(template, kwargs.get("year", "0000"))
     template = patch_overview(template, kwargs.get("overview", "N/A"))
     template = patch_actors(template, kwargs.get("cast_list", None))
     template = patch_genres(template, kwargs.get("genres", None))
-    template = patch_cover(template, kwargs.get("cover", "N/A"))
-    template = patch_rating(template, kwargs.get("rating", "N/A"))
+    template = patch_cover(template, kwargs.get("cover", "https://image.tmdb.org/t/p/w500"))
+    template = patch_rating(template, kwargs.get("rating", -1))
     template = patch_language(template, kwargs.get("language", "N/A"))
     return template
