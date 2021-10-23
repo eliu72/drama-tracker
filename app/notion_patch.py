@@ -63,6 +63,9 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
     data = response.json()
     max_cast_list = min(5, len(data))
     cast_list = data["cast"][:max_cast_list]
+
+    if cast_list == []:
+        return None
     return cast_list
 
 
@@ -104,7 +107,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         year=int(title_details.get(date, "0000")[:4]),
         overview=title_details.get("overview", "N/A"),
         cast_list=cast_list,
-        genres=title_details.get("genres", "N/A"),
+        genres=title_details.get("genres", None),
         cover=title_details.get("poster_path", "N/A"),
         rating=title_details.get("vote_average", "N/A"),
         language=title_details.get("original_language", "N/A"),
