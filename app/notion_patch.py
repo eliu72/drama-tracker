@@ -22,13 +22,8 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
     data = response.json()
 
     # check return status
-    if response.status_code != 200:
-        return Exception(
-            "Title Search Error "
-            + str(response.status_code)
-            + ": "
-            + str(response.reason)
-        )
+    if response.json()['results'] == []:
+        return Exception("Title Search Error")
 
     # get full details using id
     id = data["results"][0]["id"]
