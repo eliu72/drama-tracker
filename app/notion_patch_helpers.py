@@ -44,6 +44,8 @@ def patch_genres(template: Dict = {}, genres_list: List[Dict] = []):
 
 
 def patch_cover(template: Dict = {}, filepath: str = ""):
+    if filepath is None:
+        filepath = ""
     template["cover"]["external"]["url"] = "https://image.tmdb.org/t/p/w500" + filepath
     return template
 

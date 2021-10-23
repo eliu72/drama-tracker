@@ -128,17 +128,10 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         overview=title_details.get("overview", "N/A"),
         cast_list=cast_list,
         genres=title_details.get("genres", None),
-        cover=title_details.get("poster_path", "N/A"),
+        cover=title_details.get("poster_path", title_details.get("backdrop_path", "")),
         rating=title_details.get("vote_average", "N/A"),
         language=title_details.get("original_language", "N/A"),
     )
-        
-    # check if poster_path exists
-    if title_details["poster_path"] == "null" and title_details["backdrop_path"]:
-        patch_request = helpers.patch_cover(
-            patch_request,
-            "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
-        )
  
     response = requests.patch(
         notion_base_url, data=json.dumps(patch_request), headers=NOTION_HEADER
