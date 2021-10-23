@@ -63,7 +63,7 @@ def patch_all(template: Dict = {}, **kwargs):
     template = patch_overview(template, kwargs.get("overview", "N/A"))
     template = patch_actors(template, kwargs.get("cast_list", None))
     template = patch_genres(template, kwargs.get("genres", None))
-    template = patch_cover(template, kwargs.get("cover", "https://image.tmdb.org/t/p/w500"))
+    template = patch_cover(template, kwargs.get("cover", ""))
     template = patch_rating(template, kwargs.get("rating", -1))
     template = patch_language(template, kwargs.get("language", "N/A"))
     return template
