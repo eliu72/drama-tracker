@@ -23,7 +23,6 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
 
     # if title cannot be found, populate notion page with N/A and raise Exception
     if response.json()['results'] == []:
-        patch_request = helpers.patch_all(helpers.get_template())
         raise Exception("Title Search Error")
 
     # get full details using id
@@ -94,12 +93,33 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         year: page_details["properties"]["Year"]["number"],
     }
 
+    # Notion API request
+    notion_base_url = f"https://api.notion.com/v1/pages/{page_id}"
+    NOTION_HEADER = {
+        "Authorization": NOTION_KEY,
+        "Content-Type": "application/json",
+        "Notion-Version": "2021-08-16",
+    }
+
     try:
         # get details of the specified title
         title_details = get_title_details(content_type, **kwargs)
         cast_list = get_main_actors(title_details["id"], content_type)
     except Exception as e:
-        return str(e)
+        patch_request = helpers.patch_all(helpers.get_template())
+        response = requests.patch(
+            notion_base_url, data=json.dumps(patch_request), headers=NOTION_HEADER
+        )
+        # check status code
+        if response.status_code != 200:
+            error_message = (
+                "Notion API Error "
+                + str(response.status_code)
+                + "("
+                + str(response.reason)
+                + ")"
+            )
+        return str(e) + ". " + error_message
 
     # create patch_request
     patch_request = helpers.patch_all(
@@ -120,14 +140,6 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
             "https://image.tmdb.org/t/p/original" + title_details["backdrop_path"],
         )
  
-
-    # Notion API request
-    notion_base_url = f"https://api.notion.com/v1/pages/{page_id}"
-    NOTION_HEADER = {
-        "Authorization": NOTION_KEY,
-        "Content-Type": "application/json",
-        "Notion-Version": "2021-08-16",
-    }
     response = requests.patch(
         notion_base_url, data=json.dumps(patch_request), headers=NOTION_HEADER
     )
