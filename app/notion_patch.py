@@ -23,7 +23,7 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
 
     # check return status
     if response.json()['results'] == []:
-        return Exception("Title Search Error")
+        raise Exception("Title Search Error")
 
     # get full details using id
     id = data["results"][0]["id"]
@@ -32,7 +32,7 @@ def get_title_details(content_type: str = "", **kwargs) -> Dict:
 
     # check return status
     if response.status_code != 200:
-        return Exception(
+        raise Exception(
             "Get Title Details Error "
             + str(response.status_code)
             + ": "
@@ -52,7 +52,7 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
 
     # check return status
     if response.status_code != 200:
-        return Exception(
+        raise Exception(
             "Get Main Actors Error "
             + str(response.status_code)
             + ": "
