@@ -115,11 +115,11 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
             error_message = (
                 "Notion API Error "
                 + str(response.status_code)
-                + "("
+                + " ("
                 + str(response.reason)
                 + ")"
             )
-        return str(e) + ". " + error_message
+        return str(e) + ". " + error_message + patch_request
 
     # create patch_request
     patch_request = helpers.patch_all(
@@ -149,7 +149,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         return (
             "Notion API Error "
             + str(response.status_code)
-            + "("
+            + " ("
             + str(response.reason)
             + ")"
         )
