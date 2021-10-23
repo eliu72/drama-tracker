@@ -73,9 +73,9 @@ def get_main_actors(movie_id: str = "", content_type: str = "") -> List[str]:
 def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
     # return error if content_type is not specified
     if page_details["properties"]["Content Type"]["select"] is None:
-        return Exception("'Content Type' not specified!")
+        return "'Content Type' not specified!"
 
-    # extract details from new notion databse item
+    # extract details from new notion database item
     page_id = page_details["id"]
     content_type = page_details["properties"]["Content Type"]["select"]["name"]
 
@@ -103,19 +103,16 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         return e
 
     # create patch_request
-    try:
-        patch_request = helpers.patch_all(
-            helpers.get_template(),
-            year=int(title_details[date][:4]),
-            overview=title_details["overview"],
-            cast_list=cast_list,
-            genres=title_details["genres"],
-            cover=title_details["poster_path"],
-            rating=title_details["vote_average"],
-            language=title_details["original_language"],
-        )
-    except Exception as e:
-        return e
+    patch_request = helpers.patch_all(
+        helpers.get_template(),
+        year=int(title_details.get(date, "0000")[:4]),
+        overview=title_details.get("overview", "N/A"),
+        cast_list=cast_list,
+        genres=title_details.get("genres", "N/A"),
+        cover=title_details.get("poster_path", "N/A"),
+        rating=title_details.get("vote_average", "N/A"),
+        language=title_details.get("original_language", "N/A"),
+    )
         
     # check if poster_path exists
     if title_details["poster_path"] == "null" and title_details["backdrop_path"]:
