@@ -106,7 +106,7 @@ def api():
     )
 
     pages = response.json()["results"]
-    status = len(pages) + " new titles added!\n"
+    status = str(len(pages)) + " new titles added!\n"
     for page in pages:
         status += page["Name"]["title"][0]["text"]["content"] + ": " + patch_notion_db_item(page, NOTION_KEY) + "\n"
 
