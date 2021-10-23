@@ -100,7 +100,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         title_details = get_title_details(content_type, **kwargs)
         cast_list = get_main_actors(title_details["id"], content_type)
     except Exception as e:
-        return e
+        return str(e)
 
     # create patch_request
     patch_request = helpers.patch_all(
@@ -135,10 +135,11 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
 
     # check status code
     if response.status_code != 200:
-        return Exception(
+        return (
             "Notion API Error "
             + str(response.status_code)
-            + ": "
+            + "("
             + str(response.reason)
+            + ")"
         )
     return "Success!"
