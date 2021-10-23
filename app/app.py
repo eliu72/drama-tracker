@@ -92,7 +92,7 @@ def api():
         "Content-Type": "application/json",
         "Notion-Version": "2021-08-16",
     }
-    body = {
+    page_filter = {
         "filter": {
             "and": [
                 {"property": "Overview", "text": {"is_empty": True}},
@@ -102,12 +102,12 @@ def api():
         }
     }
     response = requests.post(
-        notion_base_url, data=json.dumps(body), headers=NOTION_HEADER
+        notion_base_url, data=json.dumps(page_filter), headers=NOTION_HEADER
     )
 
     pages = response.json()["results"]
-    status = "Success!"
+    status = ""
     for page in pages:
-        status = patch_notion_db_item(page, NOTION_KEY)
+        status += page["Name"]["title"][0]["text"]["content"] + ": " + patch_notion_db_item(page, NOTION_KEY) + "\n"
 
     return str(status)
