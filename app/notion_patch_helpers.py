@@ -20,7 +20,7 @@ def patch_year(template: Dict = {}, year: int = 0000):
     return template
 
 
-def patch_overview(template: Dict = {}, overview: str = ""):
+def patch_overview(template: Dict = {}, overview: str = "N/A"):
     if not overview:
         template["properties"]["Overview"]["rich_text"] = [{"text": {"content": "N/A"}}]
     template["properties"]["Overview"]["rich_text"] = [{"text": {"content": overview}}]

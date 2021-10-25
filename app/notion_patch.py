@@ -123,7 +123,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
     # create patch_request
     patch_request = helpers.patch_all(
         helpers.get_template(),
-        year=int(title_details.get(date, "0000")[:4]),
+        year=int(title_details.get(date, "-1")[:4]),
         overview=title_details.get("overview", "N/A"),
         cast_list=cast_list,
         genres=title_details.get("genres", []),
