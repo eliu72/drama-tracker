@@ -129,7 +129,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
         cast_list=cast_list,
         genres=title_details.get("genres", None),
         cover=title_details.get("poster_path", title_details.get("backdrop_path", "")),
-        rating=title_details.get("vote_average", "N/A"),
+        rating=title_details.get("vote_average", -1),
         language=title_details.get("original_language", "N/A"),
     )
  
