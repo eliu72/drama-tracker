@@ -15,19 +15,21 @@ def get_template() -> Dict:
     }
 
 
-def patch_year(template: Dict = {}, year: str = "0000"):
+def patch_year(template: Dict = {}, year: int = 0000):
     template["properties"]["Year"]["number"] = year
     return template
 
 
 def patch_overview(template: Dict = {}, overview: str = ""):
+    if not overview:
+        template["properties"]["Overview"]["rich_text"] = [{"text": {"content": "N/A"}}]
     template["properties"]["Overview"]["rich_text"] = [{"text": {"content": overview}}]
     return template
 
 
 def patch_actors(template: Dict = {}, cast_list: List[Dict] = []):
-    if not cast_list:
-        template["properties"]["Actors"]["multi_select"].append({"name": "None"})
+    if cast_list == []:
+        template["properties"]["Actors"]["multi_select"].append({"name": "N/A"})
         return template
     for actor in cast_list:
         template["properties"]["Actors"]["multi_select"].append({"name": actor["name"]})
@@ -35,8 +37,8 @@ def patch_actors(template: Dict = {}, cast_list: List[Dict] = []):
 
 
 def patch_genres(template: Dict = {}, genres_list: List[Dict] = []):
-    if not genres_list:
-        template["properties"]["Genres"]["multi_select"].append({"name": "None"})
+    if genres_list == []:
+        template["properties"]["Genres"]["multi_select"].append({"name": "N/A"})
         return template
     for genre in genres_list:
         template["properties"]["Genres"]["multi_select"].append({"name": genre["name"]})
@@ -56,6 +58,8 @@ def patch_rating(template: Dict = {}, rating: int = -1):
 
 
 def patch_language(template: Dict = {}, language: str = "en"):
+    if not language:
+        template["properties"]["Language"]["select"]["name"] = "N/A"
     template["properties"]["Language"]["select"]["name"] = language
     return template
 
@@ -63,8 +67,8 @@ def patch_language(template: Dict = {}, language: str = "en"):
 def patch_all(template: Dict = {}, **kwargs):
     template = patch_year(template, kwargs.get("year", 0000))
     template = patch_overview(template, kwargs.get("overview", "N/A"))
-    template = patch_actors(template, kwargs.get("cast_list", None))
-    template = patch_genres(template, kwargs.get("genres", None))
+    template = patch_actors(template, kwargs.get("cast_list", []))
+    template = patch_genres(template, kwargs.get("genres", []))
     template = patch_cover(template, kwargs.get("cover", ""))
     template = patch_rating(template, kwargs.get("rating", -1))
     template = patch_language(template, kwargs.get("language", "N/A"))
