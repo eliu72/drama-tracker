@@ -21,8 +21,8 @@ def patch_year(template: Dict = {}, year: int = 0000):
 
 
 def patch_overview(template: Dict = {}, overview: str = "N/A"):
-    if overview.strip() == "":
-        template["properties"]["Overview"]["rich_text"] = [{"text": {"content": "N/A"}}]
+    if not overview:
+        overview = "N/A"
     template["properties"]["Overview"]["rich_text"] = [{"text": {"content": overview}}]
     return template
 
@@ -59,7 +59,7 @@ def patch_rating(template: Dict = {}, rating: int = -1):
 
 def patch_language(template: Dict = {}, language: str = "en"):
     if not language:
-        template["properties"]["Language"]["select"]["name"] = "N/A"
+        language = "N/A"
     template["properties"]["Language"]["select"]["name"] = language
     return template
 

@@ -145,4 +145,4 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
             + str(response.reason)
             + ")"
         )
-    return "Success!" + json.dumps(patch_request) + title_details.get("overview")
+    return "Success!"
