@@ -118,7 +118,7 @@ def patch_notion_db_item(page_details: Dict = {}, NOTION_KEY: str = "") -> None:
                 + ")"
             )
             return str(e) + error_message
-        return str(e)
+        return str(e) + patch_request
 
     # create patch_request
     patch_request = helpers.patch_all(
