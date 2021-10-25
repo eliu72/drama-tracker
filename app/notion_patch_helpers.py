@@ -1,5 +1,4 @@
 from typing import Dict, List
-import logging
 
 
 def get_template() -> Dict:
@@ -22,8 +21,7 @@ def patch_year(template: Dict = {}, year: int = 0000):
 
 
 def patch_overview(template: Dict = {}, overview: str = "N/A"):
-    logging.info("overview:" + overview + "end")
-    if overview == "":
+    if overview.strip() == "":
         template["properties"]["Overview"]["rich_text"] = [{"text": {"content": "N/A"}}]
     template["properties"]["Overview"]["rich_text"] = [{"text": {"content": overview}}]
     return template
